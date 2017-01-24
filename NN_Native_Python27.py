@@ -237,8 +237,8 @@ def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=3000, learning_rat
         if print_loss and i % 200 == 0:
             print ("Loss after pass %i: %f" %(i, error_function(y, model)))
 
-if print_boundary and i % 500 == 0:
-    plot_decision_boundary(lambda x: predict(model, x), Xmoon, ymoon)
+        if print_boundary and i % 500 == 0:
+            plot_decision_boundary(lambda x: predict(model, x), Xmoon, ymoon)
     
     
     return model
