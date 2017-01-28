@@ -1,15 +1,12 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-    Created on Fri Jan 13 18:37:13 2017
+    Created on Sat Jan 28 15:12:13 2017
     
     @author: christopherhamblin
     """
-"""
-    
-    Simple example of building a nueral net with one hidden layer in python
-    
-    """
+
+
 
 
 
@@ -31,7 +28,7 @@ Xcirc, ycirc = datasets.make_circles(n_samples=n_samples, noise=.2, factor=.5)
 Xblob, yblob = datasets.make_blobs(n_samples=n_samples)
 
 #function for creating more simple data in higher dimensions
-def create_data(dim=2, n_samples=100, func='cube'):
+def create_data(dim=2, n_samples=n_samples, func='cube'):
     X=np.random.rand(n_samples, dim)
     if func=='cube':
         y=np.zeros(n_samples)
@@ -43,18 +40,20 @@ def create_data(dim=2, n_samples=100, func='cube'):
     else:
         print ('Error: undefined function')
         return
-    if dim==2:
-        plt.scatter(X[:,0],X[:,1], s=40, c=y, cmap=plt.cm.Spectral)
-    if dim==3:
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.scatter(X[:,0], X[:,1], X[:,2], s=20, c=y, cmap=plt.cm.Spectral)
+    #if dim==2:
+    #   plt.scatter(X[:,0],X[:,1], s=40, c=y, cmap=plt.cm.Spectral)
+    #if dim==3:
+    #   fig = plt.figure()
+    #  ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(X[:,0], X[:,1], X[:,2], s=20, c=y, cmap=plt.cm.Spectral)
+    y=y.astype(int)
     return X, y
 
+Xcube, ycube=create_data()
 
 
 #Function to plot data over colored regions showing the decision boundary of the net
-def plot_decision_boundary(pred_func, X, y, h=.1):   #h is the grain size
+def plot_decision_boundary(pred_func, X, y, h=.01):   #h is the grain size
     # Set min and max values and give it some padding
     x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
@@ -136,7 +135,7 @@ def error_function(y, model): #mean error
 
 
 
-def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=3000, learning_rate=.01, regularization=.01, print_loss=True, print_boundary=True):
+def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=800, learning_rate=.01, regularization=.01, print_loss=True, print_boundary=True):
     #X is input matrix, y is labels (encoded as an integer vector), hid_dim is number of hidden nodes,
     #act_func is the activation function on the hidden layer, grad_passes is number of times we run through gradient descent to train weights
     np.random.seed(0)
@@ -223,7 +222,7 @@ def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=3000, learning_rat
         else:
             print "Error: undefined Activation Function"
             break
-
+        
         #Update weight matrices
         W1-= learning_rate*dW1
         W2-= learning_rate*dW2
@@ -234,19 +233,17 @@ def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=3000, learning_rat
         
         model = {'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2,'in_dim':in_dim,'out_dim':out_dim,'hid_dim':hid_dim, 'out':out}
         
-        if print_loss and i % 200 == 0:
+        if print_loss and i % 50 == 0:
             print ("Loss after pass %i: %f" %(i, error_function(y, model)))
+        
+        if print_boundary and i % 50 == 0:
+            plot_decision_boundary(lambda x: predict(model, x), X, y)
 
-        if print_boundary and i % 500 == 0:
-            plot_decision_boundary(lambda x: predict(model, x), Xmoon, ymoon)
-    
-    
-    return model
+
+return model
 
 
 model = build_model(X=Xmoon, y=ymoon, act_func='tanh')
-
-
 
 
 
