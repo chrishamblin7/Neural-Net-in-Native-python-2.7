@@ -240,7 +240,7 @@ def build_model(X, y, hid_dim=3, act_func='tanh', grad_passes=800, learning_rate
             plot_decision_boundary(lambda x: predict(model, x), X, y)
 
 
-return model
+        return model
 
 
 model = build_model(X=Xmoon, y=ymoon, act_func='tanh')
